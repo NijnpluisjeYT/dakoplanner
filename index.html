@@ -1,0 +1,1219 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#2b8a57">
+<title>Dako Planner – De Tuinservice van Semina</title>
+<style>
+:root{--brand:#2b8a57;--brand-d:#1f6b42;--brand-l:#e7f4ec;--brand-xl:#f4faf6;--bg:#f2f6f3;--card:#fff;--text:#1d2b23;--muted:#66756c;--line:#e0e8e3;--danger:#d64545;--r:12px;--sh:0 1px 2px rgba(20,50,30,.06),0 4px 14px rgba(20,50,30,.06);--shm:0 12px 44px rgba(10,30,18,.30);--hh:56px;--hour:56px}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text)}
+body.modal-open{overflow:hidden}
+button{font:inherit;color:inherit;cursor:pointer}
+input,select,textarea{font:inherit;color:inherit}
+a{color:var(--brand-d)}
+h1,h2,h3{margin:0;line-height:1.25}
+.ic{flex:none;vertical-align:middle}
+
+/* Bovenbalk */
+.topbar{position:sticky;top:0;z-index:40;height:var(--hh);background:var(--brand);color:#fff;display:flex;align-items:center;gap:16px;padding:0 20px;box-shadow:0 2px 6px rgba(0,0,0,.18)}
+.brand{display:flex;align-items:center;gap:10px;color:#fff;text-decoration:none;flex:none}
+.brand .logo{width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,.18);display:grid;place-items:center}
+.brand b{display:block;font-size:17px;line-height:1.1}
+.brand small{display:block;font-size:11px;opacity:.85;line-height:1.2}
+.search{display:flex;align-items:center;gap:8px;background:rgba(0,0,0,.18);border-radius:8px;padding:0 12px;height:36px;width:260px;flex:0 1 260px;color:#fff}
+.search input{background:none;border:0;outline:0;color:#fff;width:100%;min-width:0}
+.search input::placeholder{color:rgba(255,255,255,.75)}
+.topnav{display:flex;margin-left:auto;gap:2px}
+.topnav a{color:rgba(255,255,255,.85);text-decoration:none;padding:0 12px;height:var(--hh);display:flex;align-items:center;font-weight:500;border-bottom:3px solid transparent;white-space:nowrap}
+.topnav a:hover{color:#fff;background:rgba(255,255,255,.08)}
+.topnav a.active{color:#fff;font-weight:700;border-bottom-color:#fff}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid transparent;border-radius:8px;padding:8px 14px;font-weight:600;background:#fff;line-height:1.2}
+.btn-primary{background:var(--brand);color:#fff}
+.btn-primary:hover{background:var(--brand-d)}
+.btn-light{background:#fff;color:var(--brand-d)}
+.btn-light:hover{background:var(--brand-l)}
+.btn-line{background:#fff;border-color:#cdd8d1;color:var(--text)}
+.btn-line:hover{background:var(--brand-xl)}
+.btn-danger{background:var(--danger);color:#fff}
+.btn-danger:hover{background:#b83636}
+.btn-danger-line{background:#fff;border-color:#f0c4c4;color:var(--danger)}
+.btn-danger-line:hover{background:#fdf1f1}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.btn-sm{padding:5px 10px;font-size:13px}
+.btn-text{background:none;border:0;color:var(--brand-d);font-weight:600;padding:8px 10px;border-radius:6px}
+.btn-text:hover{background:var(--brand-l)}
+.btn-text.danger{color:var(--danger)}
+.btn-text.danger:hover{background:#fdf1f1}
+.up{text-transform:uppercase;letter-spacing:.04em;font-size:13px}
+.icon-btn{background:none;border:0;border-radius:8px;width:36px;height:36px;display:inline-grid;place-items:center;color:inherit}
+.icon-btn:hover{background:rgba(0,0,0,.07)}
+
+main{max-width:1400px;margin:0 auto;padding:22px 20px 40px}
+.page-head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:18px;flex-wrap:wrap}
+.page-head h1{font-size:26px}
+.sub{margin:2px 0 0;color:var(--muted)}
+.banner{background:#fff4e5;border:1px solid #f3d29c;color:#7a4b00;border-radius:10px;padding:10px 14px;margin-bottom:16px}
+
+.card{background:var(--card);border-radius:var(--r);box-shadow:var(--sh);border:1px solid var(--line);padding:18px}
+.card-h{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.card-h h2{font-size:17px}
+.card-h a{font-size:13px;font-weight:600;text-decoration:none}
+.card-h a:hover{text-decoration:underline}
+
+/* Dashboard */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:16px}
+.stat{display:flex;align-items:center;gap:14px;text-align:left;background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:16px;box-shadow:var(--sh)}
+.stat:hover{border-color:var(--brand)}
+.stat-ic{width:46px;height:46px;border-radius:12px;background:var(--brand-l);color:var(--brand-d);display:grid;place-items:center;flex:none}
+.stat b{display:block;font-size:26px;line-height:1.1}
+.stat small{color:var(--muted)}
+.dash-grid{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);gap:16px;align-items:start}
+.col{display:grid;gap:16px}
+.next-card{background:linear-gradient(135deg,var(--brand) 0%,#3da56d 100%);color:#fff;border:0}
+.next-card .card-h h2{color:#fff}
+.next-card h3{font-size:21px;margin:4px 0 8px}
+.next-card .meta{display:grid;gap:5px;opacity:.95}
+.next-card .meta div{display:flex;gap:8px;align-items:flex-start}
+.next-card .when{display:inline-block;background:rgba(255,255,255,.2);border-radius:99px;padding:2px 10px;font-size:13px;font-weight:600}
+.next-card .btn{margin-top:14px}
+.att-list{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.att{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:10px;background:var(--brand-xl);font-size:14px}
+.att.warn{background:#fff4e5}
+.att.info{background:#eaf3fd}
+.att.ok{background:var(--brand-xl);color:var(--brand-d)}
+.att .ic{margin-top:2px}
+.att button{background:none;border:0;color:var(--brand-d);font-weight:700;padding:0;margin-left:6px;text-decoration:underline}
+
+/* Afsprakenlijst */
+.arow{display:flex;align-items:center;gap:14px;width:100%;text-align:left;background:#fff;border:1px solid var(--line);border-left:5px solid var(--c,#94a3b8);border-radius:10px;padding:10px 14px;margin-bottom:8px}
+.arow:hover{background:var(--brand-xl);border-color:#cfdcd4;border-left-color:var(--c)}
+.arow.is-cancel{opacity:.6}
+.arow.is-cancel .atitle{text-decoration:line-through}
+.adate{width:46px;text-align:center;flex:none;line-height:1.1}
+.adate b{display:block;font-size:20px}
+.adate small{font-size:11px;text-transform:uppercase;color:var(--muted);letter-spacing:.04em}
+.adate.time b{font-size:15px}
+.abody{flex:1;min-width:0;display:grid;gap:2px}
+.atitle{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ameta{font-size:13px;color:var(--muted);display:flex;flex-wrap:wrap;gap:2px 12px;align-items:center}
+.ameta span{display:inline-flex;gap:4px;align-items:center}
+.atags{display:flex;gap:8px;align-items:center;flex:none;flex-wrap:wrap;justify-content:flex-end}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:12px;background:#f0f4f2;border-radius:99px;padding:2px 10px 2px 8px;white-space:nowrap}
+.chip i{width:9px;height:9px;border-radius:50%;display:inline-block}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:2px 10px;border-radius:99px;font-size:12px;font-weight:600;color:var(--s);background:#eef2f0;background:color-mix(in srgb,var(--s) 14%,#fff);white-space:nowrap}
+.badge::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--s)}
+.demo{font-style:normal;font-size:10px;font-weight:700;background:#fde68a;color:#7a5a00;border-radius:4px;padding:1px 5px;margin-left:6px;text-transform:uppercase;letter-spacing:.04em}
+.dgroup{font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin:18px 0 8px;font-weight:700}
+.dgroup:first-child{margin-top:4px}
+.empty{text-align:center;color:var(--muted);padding:30px 10px}
+.empty .ic{color:#9fb5a8;margin-bottom:6px}
+.empty p{margin:4px 0 12px}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.tab{background:#fff;border:1px solid var(--line);border-radius:99px;padding:6px 14px;font-weight:600;color:var(--muted)}
+.tab small{margin-left:5px;opacity:.8}
+.tab.on{background:var(--brand);border-color:var(--brand);color:#fff}
+.filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.filters .in{width:auto;min-width:160px}
+.filters .grow{flex:1;min-width:200px}
+
+/* Formulieren */
+.in{width:100%;padding:9px 11px;border:1px solid #cdd8d1;border-radius:7px;background:#fff;min-height:40px}
+.in:focus{outline:0;border-color:var(--brand);box-shadow:0 0 0 3px rgba(43,138,87,.18)}
+textarea.in{resize:vertical;min-height:84px}
+.frow{display:grid;grid-template-columns:130px 1fr;gap:10px;align-items:start;padding:6px 0}
+.frow>label{text-align:right;color:var(--muted);padding-top:10px;font-size:14px}
+.inline{display:flex;gap:8px;align-items:center}
+.inline .in{flex:1}
+.title-in{font-size:18px;padding:11px 12px;border-radius:7px}
+.form-error{background:#fdecec;color:#9b1c1c;border-radius:8px;padding:8px 12px;margin:8px 0;font-size:14px}
+.newclient{background:var(--brand-xl);border:1px dashed #b9d6c5;border-radius:10px;padding:8px 12px;margin:4px 0 6px}
+.dotp{width:14px;height:14px;border-radius:50%;flex:none;border:1px solid rgba(0,0,0,.15)}
+.sw{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.sw button{width:30px;height:30px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 1px #cdd8d1}
+.sw button.on{box-shadow:0 0 0 2px var(--text)}
+.sw input[type=color]{width:38px;height:34px;padding:0;border:1px solid #cdd8d1;border-radius:8px;background:#fff}
+
+/* Modals */
+.overlay{position:fixed;inset:0;background:rgba(20,35,26,.5);display:flex;align-items:flex-start;justify-content:center;padding:4vh 12px;overflow:auto;z-index:100}
+.modal{background:#fff;border-radius:10px;box-shadow:var(--shm);width:100%;max-width:580px;margin:auto 0;display:block}
+.modal.sm{max-width:450px}
+.modal.lg{max-width:680px}
+.modal-head{display:flex;align-items:center;justify-content:space-between;padding:12px 14px 4px 22px}
+.modal-head h2{font-size:16px;color:var(--muted);font-weight:600}
+.modal-body{padding:8px 22px 14px}
+.modal-foot{display:flex;align-items:center;gap:6px;justify-content:flex-end;padding:12px 18px;border-top:1px solid var(--line)}
+.modal-foot .sp{flex:1}
+.confirm-text{margin:8px 0;line-height:1.5}
+.req{display:block;margin-top:12px;font-size:14px}
+.req input{margin-top:6px;width:100%;padding:9px 11px;border:1px solid #cdd8d1;border-radius:7px}
+.vrows{display:grid;gap:12px;margin:12px 0 4px}
+.vrow{display:flex;gap:12px;align-items:flex-start}
+.vrow .ic{color:var(--brand);margin-top:2px}
+.vrow .pre{white-space:pre-wrap}
+.vtitle{font-size:22px;margin:4px 0 8px}
+.qs{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.qs-btn{border:1px solid var(--line);background:#fff;border-radius:99px;padding:4px 11px;font-size:13px;font-weight:600}
+.qs-btn:hover{border-color:var(--s)}
+.qs-btn.on{background:var(--s);color:#fff;border-color:var(--s)}
+.lbl{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;font-weight:700;margin-top:16px}
+.raw{background:#0f1f16;color:#cfe8d9;padding:14px;border-radius:8px;font:12px/1.5 ui-monospace,Menlo,Consolas,monospace;white-space:pre-wrap;word-break:break-word;max-height:60vh;overflow:auto}
+
+/* Toasts */
+#toasts{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);display:grid;gap:8px;z-index:200;width:min(92vw,420px);pointer-events:none}
+.toast{background:#173a27;color:#fff;border-radius:10px;padding:11px 16px;box-shadow:var(--shm);animation:tin .2s ease;pointer-events:auto}
+.toast.error{background:#8f2323}
+@keyframes tin{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+/* Planning */
+.plan{display:grid;grid-template-columns:262px minmax(0,1fr);background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--sh);overflow:hidden}
+.plan.no-side{grid-template-columns:minmax(0,1fr)}
+.plan-side{border-right:1px solid var(--line);padding:14px;background:#fbfdfc;overflow:auto}
+.mini-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;color:var(--brand-d);font-weight:700;font-size:13px;letter-spacing:.04em;text-transform:uppercase}
+.mini{display:grid;grid-template-columns:repeat(7,1fr);gap:0;text-align:center;font-size:12.5px}
+.mini .dn{color:var(--muted);font-weight:600;padding:4px 0;font-size:11px}
+.mini button{background:none;border:0;border-radius:0;padding:5px 0;position:relative;color:var(--text)}
+.mini button.other{color:#a9b8af}
+.mini button.inweek{background:var(--brand-l)}
+.mini button.sel{background:var(--brand);color:#fff;border-radius:99px;font-weight:700}
+.mini button.today:not(.sel){color:var(--brand-d);font-weight:800;text-decoration:underline}
+.mini button.has::after{content:"";position:absolute;bottom:1px;left:50%;width:4px;height:4px;margin-left:-2px;border-radius:50%;background:var(--brand)}
+.mini button.sel.has::after{background:#fff}
+.side-title{display:flex;align-items:center;justify-content:space-between;margin:20px 0 8px;font-size:11.5px;letter-spacing:.07em;color:var(--muted);font-weight:700;text-transform:uppercase}
+.side-check{display:flex;align-items:center;gap:9px;padding:5px 0;cursor:pointer;font-size:14px}
+.side-check input{width:16px;height:16px}
+.side-check small{margin-left:auto;color:var(--muted)}
+.cal-toolbar{display:flex;align-items:center;gap:12px;padding:10px 14px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.cal-toolbar .btn-primary{text-transform:uppercase;letter-spacing:.04em;font-size:13px}
+.navgrp{display:flex;align-items:center;gap:2px}
+.cal-title{font-size:19px;font-weight:600;flex:1;text-align:center;min-width:150px}
+.weeknr{font-size:13px;color:var(--muted)}
+.seg{display:inline-flex;border:1px solid #cdd8d1;border-radius:8px;overflow:hidden}
+.seg button{background:#fff;border:0;padding:6px 14px;font-weight:600;color:var(--muted)}
+.seg button+button{border-left:1px solid #cdd8d1}
+.seg button.on{background:var(--brand);color:#fff}
+.cal-scroll{overflow:auto;height:calc(100vh - 200px);height:calc(100dvh - 200px);min-height:440px;position:relative}
+.wgrid{min-width:calc(56px + var(--cols)*108px)}
+.whead,.wbody{display:grid;grid-template-columns:56px repeat(var(--cols),minmax(0,1fr))}
+.whead{position:sticky;top:0;z-index:5;background:#fff;border-bottom:1px solid var(--line)}
+.dhead{background:none;border:0;border-left:1px solid var(--line);padding:9px 4px;text-align:center;font-weight:600;color:var(--muted)}
+.dhead:hover{background:var(--brand-xl)}
+.dhead b{color:var(--text);font-size:16px;margin-right:4px}
+.dhead.today{color:var(--brand-d);background:var(--brand-xl)}
+.dhead.today b{color:var(--brand-d)}
+.hours{border-right:0}
+.hour{height:var(--hour);position:relative}
+.hour span{position:absolute;top:-8px;right:8px;font-size:11.5px;color:var(--muted)}
+.hour:first-child span{display:none}
+.dcol{position:relative;border-left:1px solid var(--line);background-image:repeating-linear-gradient(to bottom,transparent 0,transparent calc(var(--hour) - 1px),var(--line) calc(var(--hour) - 1px),var(--line) var(--hour))}
+.dcol.today{background-color:#f4faf7}
+.ev{position:absolute;border:0;border-left:4px solid var(--c);background:#eaf5ee;background:color-mix(in srgb,var(--c) 17%,#fff);border-radius:4px;padding:2px 6px;text-align:left;overflow:hidden;font-size:12px;line-height:1.25;box-shadow:0 1px 2px rgba(0,0,0,.1);color:var(--text)}
+.ev:hover{z-index:4;box-shadow:0 3px 10px rgba(0,0,0,.18)}
+.ev b{display:block;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:12px}
+.ev span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#46564c}
+.ev .sdot{position:absolute;top:5px;right:5px;width:9px;height:9px;border-radius:50%;background:var(--s);padding:0}
+.ev.cancel{opacity:.55}
+.ev.cancel b{text-decoration:line-through}
+.ev.done{opacity:.72}
+.nowline{position:absolute;left:0;right:0;height:0;border-top:2px solid #e5484d;z-index:3;pointer-events:none}
+.nowline::before{content:"";position:absolute;left:-5px;top:-6px;width:9px;height:9px;border-radius:50%;background:#e5484d}
+.mgrid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr))}
+.mdn{padding:8px 6px;text-align:center;font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid var(--line)}
+.mcell{min-height:112px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:4px;cursor:pointer;display:flex;flex-direction:column;gap:3px;min-width:0}
+.mcell:nth-child(7n){border-right:0}
+.mcell:hover{background:var(--brand-xl)}
+.mcell.other{background:#f8faf9}
+.mcell.other .mnum{color:#a9b8af}
+.mcell.today{background:#eef8f2}
+.mnum{align-self:flex-start;background:none;border:0;width:26px;height:26px;border-radius:99px;font-weight:600;font-size:13px}
+.mnum:hover{background:var(--brand-l)}
+.mcell.today .mnum{background:var(--brand);color:#fff}
+.mchip{display:block;width:100%;text-align:left;border:0;border-left:3px solid var(--c);background:#eaf5ee;background:color-mix(in srgb,var(--c) 17%,#fff);border-radius:3px;padding:1px 5px;font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mchip.cancel{opacity:.55;text-decoration:line-through}
+.mchip b{font-weight:700;margin-right:4px}
+.mmore{background:none;border:0;text-align:left;color:var(--brand-d);font-size:12px;font-weight:700;padding:0 4px}
+
+/* Klanten / werkzaamheden */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px}
+.ccard{display:flex;gap:12px;text-align:left;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:14px;box-shadow:var(--sh)}
+.ccard:hover{border-color:var(--brand)}
+.avatar{width:44px;height:44px;border-radius:50%;background:var(--brand-l);color:var(--brand-d);display:grid;place-items:center;font-weight:700;flex:none}
+.cinfo{display:grid;gap:1px;min-width:0;flex:1}
+.cinfo b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cinfo small{color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ccount{font-size:12px;color:var(--brand-d);background:var(--brand-l);border-radius:99px;padding:2px 9px;white-space:nowrap;flex:none}
+.tcard{background:#fff;border:1px solid var(--line);border-top:5px solid var(--c);border-radius:var(--r);padding:14px;box-shadow:var(--sh);display:grid;gap:6px}
+.tcard h3{display:flex;align-items:center;gap:8px;font-size:16px}
+.tcard p{margin:0;color:var(--muted);font-size:14px;min-height:20px}
+.tcard .row{display:flex;gap:6px;margin-top:6px;align-items:center}
+.tcard .row .sp{flex:1}
+
+/* Instellingen */
+.set-grid{display:grid;gap:16px;max-width:860px}
+.set-card h2{font-size:17px;margin-bottom:4px}
+.set-card p{margin:2px 0 12px;color:var(--muted);font-size:14px}
+.set-actions{display:flex;gap:10px;flex-wrap:wrap}
+.dtable{width:100%;border-collapse:collapse;margin:6px 0 10px}
+.dtable td{padding:9px 6px;border-bottom:1px solid var(--line)}
+.dtable td:last-child{text-align:right}
+.dtable tr:last-child td{border-bottom:0}
+.danger-card{border-color:#f0c4c4;background:#fffafa}
+
+/* Onderbalk (telefoon) */
+.bottomnav{display:none;position:fixed;left:0;right:0;bottom:0;z-index:40;background:#fff;border-top:1px solid var(--line);grid-template-columns:repeat(6,1fr);padding-bottom:env(safe-area-inset-bottom)}
+.bottomnav a{display:flex;flex-direction:column;align-items:center;gap:2px;padding:7px 0 6px;text-decoration:none;color:var(--muted);font-size:10.5px;font-weight:600}
+.bottomnav a.active{color:var(--brand-d)}
+.bottomnav a.active .ic{stroke-width:2.4}
+
+@media (max-width:1180px){.search{display:none}}
+@media (max-width:980px){
+ .plan{grid-template-columns:minmax(0,1fr)}
+ .plan-side{border-right:0;border-bottom:1px solid var(--line)}
+ .dash-grid{grid-template-columns:minmax(0,1fr)}
+ .stats{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:899px){
+ .topnav{display:none}
+ .topbar{padding:0 14px}
+ .topbar .btn{margin-left:auto}
+ .bottomnav{display:grid}
+ main{padding:16px 12px 90px}
+ #toasts{bottom:76px}
+ .cal-scroll{height:calc(100vh - 290px);height:calc(100dvh - 290px)}
+}
+@media (max-width:600px){
+ .frow{grid-template-columns:1fr;gap:4px}
+ .frow>label{text-align:left;padding-top:4px}
+ .btn-new span{display:none}
+ .cal-title{order:5;flex-basis:100%;text-align:left}
+ .atags{display:none}
+ .mcell{min-height:70px}
+ .mchip b{display:none}
+ .stat{padding:12px;gap:10px}
+ .stat b{font-size:22px}
+ .overlay{padding:2vh 8px}
+ .modal-body{padding:6px 16px 12px}
+ .page-head h1{font-size:22px}
+}
+</style>
+</head>
+<body>
+<noscript>Deze app heeft JavaScript nodig. Zet JavaScript aan in uw browser.</noscript>
+<div id="shell"></div>
+<div id="modals"></div>
+<div id="toasts" aria-live="polite"></div>
+
+<script>
+'use strict';
+/* =========================================================
+   Dako Planner – De Tuinservice van Semina
+   Alles wordt lokaal in deze browser opgeslagen (localStorage).
+   ========================================================= */
+
+const KEY = 'dako-planner-data-v1';
+const HOUR_H = 56;
+const STATUSES = [
+  {id:'gepland',   naam:'Gepland',       kleur:'#3b82f6'},
+  {id:'bevestigd', naam:'Bevestigd',     kleur:'#16a34a'},
+  {id:'uitvoering',naam:'In uitvoering', kleur:'#f59e0b'},
+  {id:'afgerond',  naam:'Afgerond',      kleur:'#64748b'},
+  {id:'geannuleerd',naam:'Geannuleerd',  kleur:'#dc2626'}
+];
+const OPEN_IDS = ['gepland','bevestigd','uitvoering'];
+const MAANDEN = ['januari','februari','maart','april','mei','juni','juli','augustus','september','oktober','november','december'];
+const MAANDEN_KORT = ['jan','feb','mrt','apr','mei','jun','jul','aug','sep','okt','nov','dec'];
+const DAGEN = ['zondag','maandag','dinsdag','woensdag','donderdag','vrijdag','zaterdag'];
+const DAGEN_KORT = ['zo','ma','di','wo','do','vr','za'];
+const PALET = ['#2e9e5b','#d9a21b','#c0763a','#2a8fa8','#8a5cc2','#e06a8a','#5b7fd6','#7a8b3a'];
+
+/* ---------- Hulpfuncties ---------- */
+const $ = (s, r=document) => r.querySelector(s);
+const pad = n => String(n).padStart(2,'0');
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const cap = s => s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
+const uid = () => 'x' + Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+const fmtDate = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const parseDate = s => { const [y,m,d] = s.split('-').map(Number); return new Date(y, m-1, d); };
+const todayStr = () => fmtDate(new Date());
+const addDays = (s,n) => { const d = parseDate(s); d.setDate(d.getDate()+n); return fmtDate(d); };
+const startOfWeek = s => { const d = parseDate(s); d.setDate(d.getDate() - ((d.getDay()+6)%7)); return fmtDate(d); };
+const toMin = t => { if(!t || !/^\d{1,2}:\d{2}$/.test(t)) return 0; const [h,m] = t.split(':').map(Number); return h*60+m; };
+const minToStr = m => `${pad(Math.floor(m/60))}:${pad(m%60)}`;
+const nowMin = () => { const n = new Date(); return n.getHours()*60 + n.getMinutes(); };
+const evEnd = a => { const s = toMin(a.start); let e = a.end ? toMin(a.end) : s+60; if(e <= s) e = s+30; return e; };
+const cmp = (a,b) => (a.date+' '+(a.start||'')).localeCompare(b.date+' '+(b.start||''));
+function isoWeek(s){ const d = parseDate(s); d.setHours(0,0,0,0); d.setDate(d.getDate()+3-((d.getDay()+6)%7)); const w1 = new Date(d.getFullYear(),0,4); return 1 + Math.round(((d-w1)/864e5 - 3 + ((w1.getDay()+6)%7))/7); }
+function dateMid(s){ const d = parseDate(s); const y = d.getFullYear() !== new Date().getFullYear() ? ' '+d.getFullYear() : ''; return `${DAGEN[d.getDay()]} ${d.getDate()} ${MAANDEN[d.getMonth()]}${y}`; }
+function dateLong(s){ const d = parseDate(s); return `${DAGEN[d.getDay()]} ${d.getDate()} ${MAANDEN[d.getMonth()]} ${d.getFullYear()}`; }
+function relDay(s){ const t = todayStr(); if(s===t) return 'Vandaag · '+dateMid(s); if(s===addDays(t,1)) return 'Morgen · '+dateMid(s); if(s===addDays(t,-1)) return 'Gisteren · '+dateMid(s); return cap(dateMid(s)); }
+const timeRange = a => `${a.start||''}${a.end ? '–'+a.end : ''}`;
+const initials = n => (n||'?').split(/\s+/).filter(Boolean).slice(0,2).map(w=>w[0].toUpperCase()).join('') || '?';
+const plural = (n, een, meer) => n === 1 ? een : meer;
+
+/* ---------- Pictogrammen ---------- */
+const ICONS = {
+  dashboard:'<rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/>',
+  calendar:'<rect x="3" y="4" width="18" height="17" rx="2.5"/><path d="M16 2v4M8 2v4M3 10h18"/>',
+  list:'<path d="M8 6h13M8 12h13M8 18h13"/><circle cx="4" cy="6" r="1"/><circle cx="4" cy="12" r="1"/><circle cx="4" cy="18" r="1"/>',
+  users:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14.3c2.2.7 3.5 2.7 3.5 5.7"/>',
+  leaf:'<path d="M20 4C10 4 4 9 4 16c0 1.5.4 3 1 4 1 .3 2 .5 3 .5 7 0 12-6 12-16.5z"/><path d="M4 20c3-5 6-8 11-11"/>',
+  settings:'<path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/>',
+  plus:'<path d="M12 5v14M5 12h14"/>',
+  chevL:'<path d="M15 6l-6 6 6 6"/>',
+  chevR:'<path d="M9 6l6 6-6 6"/>',
+  chevsL:'<path d="M11 6l-6 6 6 6M18 6l-6 6 6 6"/>',
+  chevsR:'<path d="M6 6l6 6-6 6M13 6l6 6-6 6"/>',
+  search:'<circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4-4"/>',
+  download:'<path d="M12 4v11M7 11l5 5 5-5M5 20h14"/>',
+  upload:'<path d="M12 16V5M7 9l5-5 5 5M5 20h14"/>',
+  trash:'<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>',
+  edit:'<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/>',
+  pin:'<path d="M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.5C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>',
+  clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  phone:'<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/>',
+  mail:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>',
+  x:'<path d="M6 6l12 12M18 6L6 18"/>',
+  check:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+  alert:'<path d="M12 4l9.5 16.5h-19z"/><path d="M12 10v4M12 17.5v.01"/>',
+  user:'<circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.5-6 8-6s8 2 8 6"/>',
+  tag:'<path d="M3 12V4h8l10 10-8 8z"/><circle cx="7.5" cy="8.5" r="1.2"/>',
+  note:'<path d="M5 4h14v16H5z"/><path d="M8 9h8M8 13h8M8 17h5"/>',
+  info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.01"/>',
+  db:'<ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v12c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3"/>',
+  done:'<circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/>'
+};
+const icon = (n, s=20) => `<svg class="ic" width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[n]||''}</svg>`;
+
+/* ---------- Gegevens ---------- */
+function defaultTypes(){ return [
+  {id:'t-planten',    name:'Planten',              color:'#2e9e5b', desc:'Nieuwe planten in de tuin of border zetten.'},
+  {id:'t-zaaien',     name:'Zaaien',               color:'#d9a21b', desc:'Zaden zaaien in de tuin of in bakken.'},
+  {id:'t-potten',     name:'Potten vullen',        color:'#c0763a', desc:'Potten en bakken vullen met aarde en planten.'},
+  {id:'t-opfrissen',  name:'Tuin opfrissen',       color:'#2a8fa8', desc:'De tuin netjes maken en opfrissen.'},
+  {id:'t-verzorgen',  name:'Planten verzorgen',    color:'#8a5cc2', desc:'Water geven, snoeien en onderhoud.'},
+  {id:'t-balkon',     name:'Balkonwerkzaamheden',  color:'#e06a8a', desc:'Balkon beplanten en onderhouden.'}
+]; }
+function defaultDb(){ return {app:'dako-planner', version:1, appointments:[], clients:[], workTypes:defaultTypes(), settings:{dayStart:7, dayEnd:19, lastBackup:null}}; }
+
+function normalize(d){
+  const out = defaultDb();
+  const str = v => (v == null ? '' : String(v));
+  out.clients = (Array.isArray(d.clients) ? d.clients : []).filter(c => c && c.id && c.name).map(c => ({
+    id:str(c.id), name:str(c.name), phone:str(c.phone), email:str(c.email), address:str(c.address), notes:str(c.notes), created:c.created||Date.now(), ...(c.demo?{demo:true}:{})
+  }));
+  out.workTypes = Array.isArray(d.workTypes) && d.workTypes.length ? d.workTypes.filter(t => t && t.id && t.name).map(t => ({id:str(t.id), name:str(t.name), color:/^#[0-9a-f]{6}$/i.test(t.color)?t.color:'#2e9e5b', desc:str(t.desc)})) : defaultTypes();
+  out.appointments = (Array.isArray(d.appointments) ? d.appointments : []).filter(a => a && a.id && /^\d{4}-\d{2}-\d{2}$/.test(str(a.date))).map(a => ({
+    id:str(a.id), title:str(a.title)||'Afspraak', clientId:str(a.clientId), clientName:str(a.clientName), date:str(a.date),
+    start:/^\d{1,2}:\d{2}$/.test(str(a.start))?str(a.start):'', end:/^\d{1,2}:\d{2}$/.test(str(a.end))?str(a.end):'',
+    location:str(a.location), typeId:str(a.typeId), status:STATUSES.some(s=>s.id===a.status)?a.status:'gepland', notes:str(a.notes),
+    created:a.created||Date.now(), updated:a.updated||null, ...(a.demo?{demo:true}:{})
+  }));
+  const s = d.settings || {};
+  out.settings = {
+    dayStart: Math.min(12, Math.max(0, parseInt(s.dayStart,10) || 7)),
+    dayEnd: Math.min(24, Math.max(13, parseInt(s.dayEnd,10) || 19)),
+    lastBackup: s.lastBackup || null
+  };
+  return out;
+}
+
+let storageOk = true;
+function load(){
+  try{
+    const t = '__dako_test__'; localStorage.setItem(t,'1'); localStorage.removeItem(t);
+  }catch(e){ storageOk = false; return defaultDb(); }
+  let raw = null;
+  try{
+    raw = localStorage.getItem(KEY);
+    if(!raw) return defaultDb();
+    return normalize(JSON.parse(raw));
+  }catch(e){
+    try{ localStorage.setItem(KEY+'-beschadigd-'+Date.now(), raw); }catch(_){}
+    return defaultDb();
+  }
+}
+let db = load();
+function save(){
+  try{ localStorage.setItem(KEY, JSON.stringify(db)); storageOk = true; return true; }
+  catch(e){ storageOk = false; toast('Opslaan is niet gelukt. Maak direct een back-up!','error'); return false; }
+}
+
+const getClient = id => id ? db.clients.find(c => c.id === id) : null;
+const getType = id => id ? db.workTypes.find(t => t.id === id) : null;
+const getStatus = id => STATUSES.find(s => s.id === id) || STATUSES[0];
+const clientNameOf = a => (getClient(a.clientId)||{}).name || a.clientName || '';
+
+/* ---------- Status van de interface ---------- */
+const ui = {
+  view:'dashboard',
+  calView: window.innerWidth < 700 ? 'day' : 'week',
+  calDate: todayStr(),
+  miniMonth: todayStr().slice(0,8)+'01',
+  sidebar: window.innerWidth >= 980,
+  hiddenTypes: new Set(),
+  showCancelled: false,
+  gridScroll: null,
+  search:'', apptTab:'upcoming', apptStatus:'', apptType:'', apptSort:'asc',
+  clientSearch:''
+};
+function setCalDate(s){ ui.calDate = s; ui.miniMonth = s.slice(0,8)+'01'; }
+
+/* ---------- Meldingen en dialogen ---------- */
+function toast(msg, kind){
+  const el = document.createElement('div');
+  el.className = 'toast' + (kind==='error' ? ' error' : '');
+  el.textContent = msg;
+  $('#toasts').appendChild(el);
+  setTimeout(() => el.remove(), kind==='error' ? 6000 : 3200);
+}
+
+function openModal({title='', body='', footer='', size='', formName=''}){
+  const ov = document.createElement('div');
+  ov.className = 'overlay';
+  ov.innerHTML = `<form class="modal ${size}" role="dialog" aria-modal="true" aria-label="${esc(title)}" novalidate ${formName?`data-form="${formName}"`:''}>
+    <div class="modal-head"><h2>${esc(title)}</h2><button type="button" class="icon-btn" data-action="closeModal" aria-label="Sluiten">${icon('x')}</button></div>
+    <div class="modal-body">${body}</div>${footer ? `<div class="modal-foot">${footer}</div>` : ''}</form>`;
+  let downOnOverlay = false;
+  ov.addEventListener('mousedown', e => { downOnOverlay = e.target === ov; });
+  ov.addEventListener('click', e => { if(e.target === ov && downOnOverlay) closeModal(ov); });
+  $('#modals').appendChild(ov);
+  document.body.classList.add('modal-open');
+  const f = ov.querySelector('[autofocus]') || ov.querySelector('input:not([type=hidden]):not([type=color]),textarea');
+  if(f && !ov.querySelector('[data-noautofocus]')) setTimeout(() => f.focus(), 30);
+  return ov;
+}
+function closeModal(ov){
+  ov = ov || [...document.querySelectorAll('.overlay')].pop();
+  if(!ov) return;
+  ov.remove();
+  document.body.classList.toggle('modal-open', !!document.querySelector('.overlay'));
+  if(ov._onClose) ov._onClose();
+}
+function closeAllModals(){ [...document.querySelectorAll('.overlay')].reverse().forEach(o => closeModal(o)); }
+
+function confirmDialog({title, text, confirmLabel='Verwijderen', danger=true, requireText=null}){
+  return new Promise(resolve => {
+    const ov = openModal({
+      title, size:'sm',
+      body: `<p class="confirm-text">${text}</p>${requireText ? `<label class="req">Typ <b>${esc(requireText)}</b> om te bevestigen:<input type="text" id="reqInput" autocomplete="off" data-noautofocus></label>` : ''}`,
+      footer: `<button type="button" class="btn-text up" data-action="closeModal">Annuleren</button><button type="submit" class="btn up ${danger?'btn-danger':'btn-primary'}" id="confirmOk" ${requireText?'disabled':''}>${esc(confirmLabel)}</button>`
+    });
+    let done = false;
+    ov._onClose = () => { if(!done){ done = true; resolve(false); } };
+    const inp = ov.querySelector('#reqInput');
+    if(inp){ inp.addEventListener('input', () => { ov.querySelector('#confirmOk').disabled = inp.value.trim().toUpperCase() !== requireText; }); setTimeout(()=>inp.focus(),30); }
+    ov.addEventListener('submit', e => {
+      e.preventDefault(); e.stopPropagation();
+      if(requireText && inp.value.trim().toUpperCase() !== requireText) return;
+      done = true; closeModal(ov); resolve(true);
+    });
+  });
+}
+
+/* ---------- Opmaak-onderdelen ---------- */
+const badge = st => `<span class="badge" style="--s:${st.kleur}">${esc(st.naam)}</span>`;
+const typeChip = ty => ty ? `<span class="chip"><i style="background:${ty.color}"></i>${esc(ty.name)}</span>` : '';
+
+function apptRow(a, o={}){
+  const ty = getType(a.typeId), st = getStatus(a.status), cn = clientNameOf(a), d = parseDate(a.date);
+  const left = o.compact ? `<span class="adate time"><b>${esc(a.start||'–')}</b><small>${a.end?esc(a.end):'&nbsp;'}</small></span>`
+                         : `<span class="adate"><b>${d.getDate()}</b><small>${MAANDEN_KORT[d.getMonth()]}</small></span>`;
+  return `<button type="button" class="arow ${a.status==='geannuleerd'?'is-cancel':''}" data-action="viewAppt" data-id="${a.id}" style="--c:${ty?ty.color:'#94a3b8'}">
+    ${left}
+    <span class="abody"><span class="atitle">${esc(a.title)}${a.demo?'<em class="demo">Demo</em>':''}</span>
+    <span class="ameta">${o.compact?'':`<span>${icon('clock',14)} ${esc(timeRange(a))}</span>`}${cn?`<span>${icon('user',14)} ${esc(cn)}</span>`:''}${a.location?`<span>${icon('pin',14)} ${esc(a.location)}</span>`:''}</span></span>
+    <span class="atags">${typeChip(ty)}${badge(st)}</span></button>`;
+}
+const emptyBox = (ic, text, btn='') => `<div class="empty">${icon(ic,34)}<p>${text}</p>${btn}</div>`;
+const newApptBtn = `<button type="button" class="btn btn-primary" data-action="newAppt">${icon('plus',18)} Nieuwe afspraak</button>`;
+
+/* =========================================================
+   WEERGAVEN
+   ========================================================= */
+const VIEWS = {dashboard:viewDashboard, planning:viewPlanning, afspraken:viewAfspraken, klanten:viewKlanten, werk:viewWerk, instellingen:viewInstellingen};
+const NAV = [['dashboard','Dashboard','dashboard'],['planning','Planning','calendar'],['afspraken','Afspraken','list'],['klanten','Klanten','users'],['werk','Werkzaamheden','leaf'],['instellingen','Instellingen','settings']];
+
+function renderShell(){
+  $('#shell').innerHTML = `
+  <header class="topbar">
+    <a class="brand" href="#/dashboard" aria-label="Naar het dashboard">
+      <span class="logo">${icon('leaf',22)}</span>
+      <span><b>Dako Planner</b><small>De Tuinservice van Semina</small></span>
+    </a>
+    <label class="search">${icon('search',17)}<input id="topSearch" type="search" placeholder="Zoek afspraken…" data-input="search" autocomplete="off" aria-label="Zoek afspraken"></label>
+    <nav class="topnav" aria-label="Hoofdmenu">${NAV.map(n=>`<a href="#/${n[0]}" data-view="${n[0]}">${n[1]}</a>`).join('')}</nav>
+    <button type="button" class="btn btn-light btn-new up" data-action="newAppt">${icon('plus',18)}<span>Nieuwe afspraak</span></button>
+  </header>
+  <main id="main"></main>
+  <nav class="bottomnav" aria-label="Menu">${NAV.map(n=>`<a href="#/${n[0]}" data-view="${n[0]}">${icon(n[2],22)}${n[1]==='Werkzaamheden'?'Werk':n[1]}</a>`).join('')}</nav>`;
+}
+function updateNav(){ document.querySelectorAll('[data-view]').forEach(a => a.classList.toggle('active', a.dataset.view === ui.view)); }
+
+function render(){
+  const cs = $('.cal-scroll'); if(cs) ui.gridScroll = cs.scrollTop;
+  updateNav();
+  const m = $('#main');
+  m.innerHTML = (storageOk ? '' : `<div class="banner"><b>Let op:</b> deze browser laat het opslaan van gegevens niet toe (bijvoorbeeld in een privévenster). Uw wijzigingen blijven niet bewaard. Maak regelmatig een back-up via Instellingen.</div>`) + VIEWS[ui.view]();
+  const sc = $('.cal-scroll');
+  if(sc){ sc.scrollTop = ui.gridScroll != null ? ui.gridScroll : (+sc.dataset.scroll || 0); }
+  const ts = $('#topSearch'); if(ts && ts.value !== ui.search) ts.value = ui.search;
+}
+function go(view){
+  if(location.hash === '#/'+view){ ui.view = view; render(); window.scrollTo(0,0); }
+  else location.hash = '#/'+view;
+}
+function viewFromHash(){ const h = location.hash.replace(/^#\/?/,''); return VIEWS[h] ? h : 'dashboard'; }
+window.addEventListener('hashchange', () => { ui.view = viewFromHash(); render(); window.scrollTo(0,0); });
+
+/* ---------- Dashboard ---------- */
+function attentionItems(){
+  const t = todayStr(), out = [];
+  const stale = db.appointments.filter(a => a.date < t && OPEN_IDS.includes(a.status));
+  if(stale.length) out.push({k:'warn', ic:'alert', text:`${stale.length} ${plural(stale.length,'afspraak','afspraken')} uit het verleden ${plural(stale.length,'is','zijn')} nog niet afgerond of geannuleerd.`, action:'attStale', label:'Bekijken'});
+  const tm = addDays(t,1);
+  const unc = db.appointments.filter(a => a.date === tm && a.status === 'gepland');
+  if(unc.length) out.push({k:'info', ic:'info', text:`Morgen ${unc.length===1?'is 1 afspraak':`zijn ${unc.length} afspraken`} nog niet bevestigd.`, action:'gotoDay', date:tm, label:'Bekijken'});
+  let shown = 0;
+  for(let i=0; i<14 && shown<2; i++){
+    const d = addDays(t,i);
+    const l = db.appointments.filter(a => a.date===d && a.status!=='geannuleerd' && a.start).sort(cmp);
+    for(let j=1; j<l.length && shown<2; j++){
+      const k = l.slice(0,j).find(x => toMin(l[j].start) < evEnd(x));
+      if(k){ out.push({k:'warn', ic:'clock', text:`Op ${dateMid(d)} overlappen “${esc(k.title)}” en “${esc(l[j].title)}”.`, action:'gotoDay', date:d, label:'Bekijken', raw:true}); shown++; }
+    }
+  }
+  if((db.appointments.length || db.clients.length) && storageOk){
+    const lb = db.settings.lastBackup;
+    const days = lb ? (Date.now() - new Date(lb).getTime())/864e5 : Infinity;
+    if(days > 14) out.push({k:'info', ic:'download', text: lb ? `Uw laatste back-up is al ${Math.floor(days)} dagen oud.` : 'U heeft nog geen back-up gemaakt.', action:'exportData', label:'Back-up maken'});
+  }
+  return out;
+}
+
+function viewDashboard(){
+  const t = todayStr(), nm = nowMin();
+  const act = db.appointments.filter(a => a.status !== 'geannuleerd');
+  const open = a => a.status !== 'afgerond';
+  const today = act.filter(a => a.date === t).sort(cmp);
+  const next = act.filter(a => open(a) && (a.date > t || (a.date === t && evEnd(a) >= nm))).sort(cmp)[0];
+  const upcoming = act.filter(a => open(a) && a.date > t).sort(cmp);
+  const done = db.appointments.filter(a => a.status === 'afgerond').length;
+  const att = attentionItems();
+  const h = new Date().getHours();
+  const greet = h < 6 ? 'Goedenacht' : h < 12 ? 'Goedemorgen' : h < 18 ? 'Goedemiddag' : 'Goedenavond';
+  const stat = (ic, label, n, data) => `<button type="button" class="stat" data-action="statGo" ${data}><span class="stat-ic">${icon(ic,24)}</span><span><b>${n}</b><small>${label}</small></span></button>`;
+
+  let nextHtml;
+  if(next){
+    const ty = getType(next.typeId), cn = clientNameOf(next);
+    let when = '';
+    if(next.date === t){
+      const s = toMin(next.start);
+      if(s <= nm) when = 'Bezig of nu aan de beurt';
+      else { const diff = s - nm; when = diff < 60 ? `Over ${diff} min` : `Over ${Math.floor(diff/60)} uur${diff%60 ? ' en '+(diff%60)+' min' : ''}`; }
+    } else when = relDay(next.date).split(' · ')[0] === 'Morgen' ? 'Morgen' : cap(dateMid(next.date));
+    nextHtml = `<span class="when">${esc(when)}</span><h3>${esc(next.title)}</h3>
+      <div class="meta"><div>${icon('calendar',18)}<span>${esc(cap(dateMid(next.date)))}, ${esc(timeRange(next))}</span></div>
+      ${cn?`<div>${icon('user',18)}<span>${esc(cn)}</span></div>`:''}
+      ${next.location?`<div>${icon('pin',18)}<span>${esc(next.location)}</span></div>`:''}
+      ${ty?`<div>${icon('tag',18)}<span>${esc(ty.name)}</span></div>`:''}</div>
+      <button type="button" class="btn btn-light" data-action="viewAppt" data-id="${next.id}">Bekijken</button>`;
+  } else nextHtml = `<p style="margin:4px 0 14px;opacity:.95">Er staat nu niets gepland. Tijd om een nieuwe klus in te plannen!</p>${`<button type="button" class="btn btn-light" data-action="newAppt">${icon('plus',18)} Nieuwe afspraak</button>`}`;
+
+  return `
+  <div class="page-head"><div><h1>${greet}!</h1><p class="sub">${esc(cap(dateLong(t)))}</p></div>${newApptBtn}</div>
+  <div class="stats">
+    ${stat('calendar','Afspraken vandaag',today.length,'data-tab="today"')}
+    ${stat('clock','Geplande klussen',upcoming.length,'data-tab="upcoming"')}
+    ${stat('done','Afgeronde klussen',done,'data-tab="all" data-status="afgerond"')}
+    ${stat('users','Klanten',db.clients.length,'data-view="klanten"')}
+  </div>
+  <div class="dash-grid">
+    <div class="col">
+      <section class="card"><div class="card-h"><h2>Vandaag</h2><a href="#/afspraken" data-action="statGo" data-tab="today">Alles bekijken</a></div>
+        ${today.length ? today.map(a => apptRow(a,{compact:true})).join('') : emptyBox('calendar','Vandaag staan er geen afspraken gepland.')}
+      </section>
+      <section class="card"><div class="card-h"><h2>Aankomende werkzaamheden</h2><a href="#/afspraken" data-action="statGo" data-tab="upcoming">Alles bekijken</a></div>
+        ${upcoming.length ? upcoming.slice(0,5).map(a => apptRow(a)).join('') : emptyBox('leaf','Er zijn nog geen aankomende werkzaamheden.', newApptBtn)}
+      </section>
+    </div>
+    <div class="col">
+      <section class="card next-card"><div class="card-h"><h2>Eerstvolgende afspraak</h2></div>${nextHtml}</section>
+      <section class="card"><div class="card-h"><h2>Aandachtspunten</h2></div>
+        ${att.length ? `<ul class="att-list">${att.map(i => `<li class="att ${i.k}">${icon(i.ic,18)}<span>${i.raw?i.text:esc(i.text)}<button type="button" data-action="${i.action}" ${i.date?`data-date="${i.date}"`:''}>${i.label}</button></span></li>`).join('')}</ul>`
+        : `<ul class="att-list"><li class="att ok">${icon('check',18)}<span>Alles is in orde. Er zijn geen aandachtspunten.</span></li></ul>`}
+      </section>
+    </div>
+  </div>`;
+}
+
+/* ---------- Planning (kalender) ---------- */
+function visibleAppts(){ return db.appointments.filter(a => (ui.showCancelled || a.status !== 'geannuleerd') && !ui.hiddenTypes.has(a.typeId || '')); }
+
+function calTitle(){
+  if(ui.calView === 'day') return cap(dateLong(ui.calDate));
+  if(ui.calView === 'month'){ const d = parseDate(ui.calDate); return `${cap(MAANDEN[d.getMonth()])} ${d.getFullYear()}`; }
+  const sw = startOfWeek(ui.calDate), a = parseDate(sw), b = parseDate(addDays(sw,6));
+  if(a.getMonth() === b.getMonth()) return `${cap(MAANDEN[a.getMonth()])} ${a.getFullYear()}`;
+  if(a.getFullYear() === b.getFullYear()) return `${cap(MAANDEN[a.getMonth()])} – ${MAANDEN[b.getMonth()]} ${b.getFullYear()}`;
+  return `${MAANDEN_KORT[a.getMonth()]} ${a.getFullYear()} – ${MAANDEN_KORT[b.getMonth()]} ${b.getFullYear()}`;
+}
+function shiftCal(dir){
+  const d = parseDate(ui.calDate);
+  if(ui.calView === 'day') d.setDate(d.getDate()+dir);
+  else if(ui.calView === 'week') d.setDate(d.getDate()+7*dir);
+  else { d.setDate(1); d.setMonth(d.getMonth()+dir); }
+  setCalDate(fmtDate(d)); render();
+}
+
+function miniCal(){
+  const m = parseDate(ui.miniMonth), y = m.getFullYear(), mo = m.getMonth();
+  const first = new Date(y, mo, 1), off = (first.getDay()+6)%7, start = addDays(fmtDate(first), -off);
+  const t = todayStr();
+  const have = new Set(visibleAppts().map(a => a.date));
+  const wk = startOfWeek(ui.calDate);
+  let cells = '';
+  for(let i=0; i<42; i++){
+    const d = addDays(start,i), dd = parseDate(d);
+    if(i >= 35 && dd.getMonth() !== mo) break;
+    const inWeek = ui.calView === 'week' && d >= wk && d <= addDays(wk,6);
+    cells += `<button type="button" data-action="miniDay" data-date="${d}" class="${dd.getMonth()!==mo?'other ':''}${d===t?'today ':''}${d===ui.calDate?'sel ':''}${inWeek?'inweek ':''}${have.has(d)?'has':''}">${dd.getDate()}</button>`;
+  }
+  return `<div class="mini-h"><button type="button" class="icon-btn" data-action="miniPrev" aria-label="Vorige maand">${icon('chevL',18)}</button><span>${MAANDEN[mo]} ${y}</span><button type="button" class="icon-btn" data-action="miniNext" aria-label="Volgende maand">${icon('chevR',18)}</button></div>
+    <div class="mini">${['M','D','W','D','V','Z','Z'].map(x=>`<span class="dn">${x}</span>`).join('')}${cells}</div>`;
+}
+
+function planSidebar(){
+  const cnt = id => db.appointments.filter(a => (a.typeId||'') === id).length;
+  const row = (id, name, color) => `<label class="side-check"><input type="checkbox" data-change="toggleType" data-id="${id}" ${ui.hiddenTypes.has(id)?'':'checked'} style="accent-color:${color}"><span>${esc(name)}</span><small>${cnt(id)}</small></label>`;
+  return `${miniCal()}
+    <div class="side-title"><span>Werkzaamheden</span></div>
+    ${db.workTypes.map(t => row(t.id, t.name, t.color)).join('')}
+    ${row('', 'Zonder type', '#94a3b8')}
+    <div class="side-title"><span>Weergave</span></div>
+    <label class="side-check"><input type="checkbox" data-change="toggleCancelled" ${ui.showCancelled?'checked':''} style="accent-color:#dc2626"><span>Geannuleerde afspraken tonen</span></label>`;
+}
+
+function layoutDay(evs){
+  evs.sort((a,b) => a.s - b.s || b.e - a.e);
+  const out = []; let cluster = [], cEnd = -1;
+  const flush = () => {
+    if(!cluster.length) return;
+    const cols = [];
+    cluster.forEach(ev => { let c = cols.findIndex(end => end <= ev.s); if(c === -1){ c = cols.length; cols.push(ev.e); } else cols[c] = ev.e; ev.col = c; });
+    cluster.forEach(ev => ev.cols = cols.length);
+    out.push(...cluster); cluster = [];
+  };
+  evs.forEach(ev => { if(ev.s >= cEnd){ flush(); cEnd = -1; } cluster.push(ev); cEnd = Math.max(cEnd, ev.e); });
+  flush();
+  return out;
+}
+
+function timeGrid(days){
+  const all = visibleAppts();
+  const by = {}; days.forEach(d => by[d] = []);
+  all.forEach(a => { if(by[a.date]) by[a.date].push({a, s: toMin(a.start), e: evEnd(a)}); });
+  let lo = db.settings.dayStart, hi = db.settings.dayEnd;
+  days.forEach(d => by[d].forEach(ev => { lo = Math.min(lo, Math.floor(ev.s/60)); hi = Math.max(hi, Math.ceil(ev.e/60)); }));
+  lo = Math.max(0, lo); hi = Math.min(24, Math.max(hi, lo+1));
+  const t = todayStr(), nm = nowMin();
+  const hours = []; for(let h=lo; h<hi; h++) hours.push(h);
+  const head = days.map(d => { const dd = parseDate(d); return `<button type="button" class="dhead ${d===t?'today':''}" data-action="gotoDay" data-date="${d}"><b>${dd.getDate()}</b>${DAGEN[dd.getDay()]}</button>`; }).join('');
+  const cols = days.map(d => {
+    const evs = layoutDay(by[d]).map(ev => {
+      const a = ev.a, ty = getType(a.typeId), st = getStatus(a.status), cn = clientNameOf(a);
+      const top = (ev.s - lo*60) / 60 * HOUR_H, height = Math.max(20, (ev.e - ev.s) / 60 * HOUR_H - 2);
+      const short = height < 40;
+      return `<button type="button" class="ev ${a.status==='geannuleerd'?'cancel':''} ${a.status==='afgerond'?'done':''}" data-action="viewAppt" data-id="${a.id}" title="${esc(a.title)} · ${esc(timeRange(a))}${cn?' · '+esc(cn):''}"
+        style="--c:${ty?ty.color:'#94a3b8'};--s:${st.kleur};top:${top}px;height:${height}px;left:calc(${ev.col}*100%/${ev.cols} + 2px);width:calc(100%/${ev.cols} - 4px)">
+        <i class="sdot"></i>${short ? `<b>${esc(a.start)} ${esc(a.title)}</b>` : `<b>${esc(a.title)}</b><span>${esc(timeRange(a))}</span>${cn&&height>=60?`<span>${esc(cn)}</span>`:''}`}</button>`;
+    }).join('');
+    const now = d===t && nm >= lo*60 && nm <= hi*60 ? `<div class="nowline" style="top:${(nm-lo*60)/60*HOUR_H}px"></div>` : '';
+    return `<div class="dcol ${d===t?'today':''}" data-action="slotClick" data-date="${d}" data-lo="${lo}" style="height:${(hi-lo)*HOUR_H}px">${evs}${now}</div>`;
+  }).join('');
+  const scroll = days.includes(t) && nm >= lo*60 ? Math.max(0, (nm - lo*60)/60*HOUR_H - 110) : 0;
+  return `<div class="cal-scroll" data-scroll="${Math.round(scroll)}"><div class="wgrid" style="--cols:${days.length};--hour:${HOUR_H}px">
+    <div class="whead"><div></div>${head}</div>
+    <div class="wbody"><div class="hours">${hours.map(h => `<div class="hour"><span>${pad(h)}:00</span></div>`).join('')}</div>${cols}</div></div></div>`;
+}
+
+function monthGrid(){
+  const all = visibleAppts();
+  const first = parseDate(ui.calDate.slice(0,8)+'01'), off = (first.getDay()+6)%7;
+  const total = off + new Date(first.getFullYear(), first.getMonth()+1, 0).getDate();
+  const rows = Math.ceil(total/7), start = addDays(fmtDate(first), -off), t = todayStr();
+  let cells = '';
+  for(let i=0; i<rows*7; i++){
+    const d = addDays(start,i), dd = parseDate(d);
+    const list = all.filter(a => a.date === d).sort(cmp);
+    const chips = list.slice(0,3).map(a => { const ty = getType(a.typeId); return `<button type="button" class="mchip ${a.status==='geannuleerd'?'cancel':''}" data-action="viewAppt" data-id="${a.id}" style="--c:${ty?ty.color:'#94a3b8'}" title="${esc(a.title)}"><b>${esc(a.start)}</b>${esc(a.title)}</button>`; }).join('');
+    cells += `<div class="mcell ${dd.getMonth()!==first.getMonth()?'other':''} ${d===t?'today':''}" data-action="newApptOn" data-date="${d}">
+      <button type="button" class="mnum" data-action="gotoDay" data-date="${d}" aria-label="${esc(dateLong(d))}">${dd.getDate()}</button>${chips}${list.length>3?`<button type="button" class="mmore" data-action="gotoDay" data-date="${d}">+${list.length-3} meer</button>`:''}</div>`;
+  }
+  return `<div class="mgrid">${['ma','di','wo','do','vr','za','zo'].map(x => `<div class="mdn">${x}</div>`).join('')}${cells}</div>`;
+}
+
+function viewPlanning(){
+  const v = ui.calView;
+  const days = v === 'day' ? [ui.calDate] : Array.from({length:7}, (_,i) => addDays(startOfWeek(ui.calDate), i));
+  const toolbar = `<div class="cal-toolbar">
+    <button type="button" class="icon-btn" data-action="toggleSide" aria-label="Zijbalk in- of uitklappen" title="Zijbalk">${icon(ui.sidebar?'chevsL':'chevsR',20)}</button>
+    <button type="button" class="btn btn-primary" data-action="newAppt">${icon('plus',17)} Nieuwe afspraak</button>
+    <div class="navgrp"><button type="button" class="icon-btn" data-action="calPrev" aria-label="Vorige periode">${icon('chevL')}</button><button type="button" class="btn-text up" data-action="calToday">Vandaag</button><button type="button" class="icon-btn" data-action="calNext" aria-label="Volgende periode">${icon('chevR')}</button></div>
+    <h2 class="cal-title">${esc(calTitle())}</h2>
+    ${v==='week'?`<span class="weeknr">week ${isoWeek(ui.calDate)}</span>`:''}
+    <div class="seg" role="group" aria-label="Weergave">${[['day','Dag'],['week','Week'],['month','Maand']].map(x => `<button type="button" data-action="calView" data-v="${x[0]}" class="${v===x[0]?'on':''}">${x[1]}</button>`).join('')}</div>
+  </div>`;
+  return `<div class="plan ${ui.sidebar?'':'no-side'}">${ui.sidebar ? `<aside class="plan-side">${planSidebar()}</aside>` : ''}<section class="plan-main">${toolbar}${v==='month' ? monthGrid() : timeGrid(days)}</section></div>`;
+}
+
+/* ---------- Afspraken (lijst) ---------- */
+function filteredAppts(){
+  const t = todayStr(), q = ui.search.trim().toLowerCase();
+  let l = db.appointments.slice();
+  if(q) l = l.filter(a => { const ty = getType(a.typeId); return [a.title, clientNameOf(a), a.location, a.notes, ty?ty.name:'', getStatus(a.status).naam].join(' ').toLowerCase().includes(q); });
+  if(ui.apptTab === 'today') l = l.filter(a => a.date === t);
+  else if(ui.apptTab === 'upcoming') l = l.filter(a => a.date > t);
+  else if(ui.apptTab === 'past') l = l.filter(a => a.date < t);
+  if(ui.apptStatus === 'open') l = l.filter(a => OPEN_IDS.includes(a.status));
+  else if(ui.apptStatus) l = l.filter(a => a.status === ui.apptStatus);
+  if(ui.apptType === '__none') l = l.filter(a => !a.typeId);
+  else if(ui.apptType) l = l.filter(a => a.typeId === ui.apptType);
+  l.sort(cmp);
+  if(ui.apptSort === 'desc') l.reverse();
+  return l;
+}
+function apptListHtml(){
+  const l = filteredAppts();
+  if(!l.length){
+    const msg = ui.search ? 'Geen afspraken gevonden voor deze zoekopdracht.' : ({today:'Er zijn vandaag geen afspraken.', upcoming:'Er zijn geen aankomende afspraken.', past:'Er zijn geen afgelopen afspraken.', all:'Er zijn nog geen afspraken.'})[ui.apptTab];
+    return emptyBox('calendar', msg, newApptBtn);
+  }
+  let html = '', last = '';
+  l.forEach(a => { if(a.date !== last){ last = a.date; html += `<h3 class="dgroup">${esc(relDay(a.date))}</h3>`; } html += apptRow(a); });
+  return html;
+}
+function viewAfspraken(){
+  const t = todayStr(), A = db.appointments;
+  const counts = {today:A.filter(a=>a.date===t).length, upcoming:A.filter(a=>a.date>t).length, past:A.filter(a=>a.date<t).length, all:A.length};
+  const tabs = [['today','Vandaag'],['upcoming','Aankomend'],['past','Afgelopen'],['all','Alles']];
+  return `<div class="page-head"><div><h1>Afspraken</h1><p class="sub">Alle werkzaamheden op een rij</p></div>${newApptBtn}</div>
+  <div class="tabs">${tabs.map(x => `<button type="button" class="tab ${ui.apptTab===x[0]?'on':''}" data-action="apptTab" data-tab="${x[0]}">${x[1]}<small>${counts[x[0]]}</small></button>`).join('')}</div>
+  <div class="filters">
+    <input class="in grow" type="search" id="apptSearch" placeholder="Zoek op naam, klant, adres of notitie…" value="${esc(ui.search)}" data-input="search" autocomplete="off">
+    <select class="in" data-change="apptStatus" aria-label="Filter op status"><option value="">Alle statussen</option><option value="open" ${ui.apptStatus==='open'?'selected':''}>Nog open</option>${STATUSES.map(s=>`<option value="${s.id}" ${ui.apptStatus===s.id?'selected':''}>${s.naam}</option>`).join('')}</select>
+    <select class="in" data-change="apptType" aria-label="Filter op werkzaamheid"><option value="">Alle werkzaamheden</option>${db.workTypes.map(t=>`<option value="${t.id}" ${ui.apptType===t.id?'selected':''}>${esc(t.name)}</option>`).join('')}<option value="__none" ${ui.apptType==='__none'?'selected':''}>Zonder type</option></select>
+    <button type="button" class="btn btn-line" data-action="apptSort">${icon('clock',16)} Datum: ${ui.apptSort==='asc'?'oud → nieuw':'nieuw → oud'}</button>
+  </div>
+  <div id="apptList">${apptListHtml()}</div>`;
+}
+
+/* ---------- Klanten ---------- */
+function clientListHtml(){
+  const q = ui.clientSearch.trim().toLowerCase();
+  const l = db.clients.filter(c => !q || [c.name,c.phone,c.email,c.address,c.notes].join(' ').toLowerCase().includes(q)).sort((a,b) => a.name.localeCompare(b.name,'nl'));
+  if(!l.length) return emptyBox('users', q ? 'Geen klanten gevonden.' : 'U heeft nog geen klanten toegevoegd.', q ? '' : `<button type="button" class="btn btn-primary" data-action="newClient">${icon('plus',18)} Nieuwe klant</button>`);
+  return `<div class="cards">${l.map(c => { const n = db.appointments.filter(a => a.clientId === c.id).length; return `<button type="button" class="ccard" data-action="viewClient" data-id="${c.id}">
+    <span class="avatar">${esc(initials(c.name))}</span>
+    <span class="cinfo"><b>${esc(c.name)}${c.demo?'<em class="demo">Demo</em>':''}</b>${c.phone?`<small>${esc(c.phone)}</small>`:''}${c.email?`<small>${esc(c.email)}</small>`:''}${c.address?`<small>${esc(c.address)}</small>`:''}</span>
+    <span class="ccount">${n} ${plural(n,'afspraak','afspraken')}</span></button>`; }).join('')}</div>`;
+}
+function viewKlanten(){
+  return `<div class="page-head"><div><h1>Klanten</h1><p class="sub">${db.clients.length} ${plural(db.clients.length,'klant','klanten')}</p></div><button type="button" class="btn btn-primary" data-action="newClient">${icon('plus',18)} Nieuwe klant</button></div>
+  <div class="filters"><input class="in grow" type="search" placeholder="Zoek op naam, telefoon, e-mail of adres…" value="${esc(ui.clientSearch)}" data-input="clientSearch" autocomplete="off"></div>
+  <div id="clientList">${clientListHtml()}</div>`;
+}
+
+/* ---------- Werkzaamheden ---------- */
+function viewWerk(){
+  return `<div class="page-head"><div><h1>Werkzaamheden</h1><p class="sub">De soorten werk die Dako uitvoert</p></div><button type="button" class="btn btn-primary" data-action="newType">${icon('plus',18)} Nieuwe werkzaamheid</button></div>
+  ${db.workTypes.length ? `<div class="cards">${db.workTypes.map(t => { const n = db.appointments.filter(a => a.typeId === t.id).length; return `<div class="tcard" style="--c:${t.color}">
+    <h3><i class="dotp" style="background:${t.color}"></i>${esc(t.name)}</h3><p>${esc(t.desc)||'&nbsp;'}</p>
+    <div class="row"><span class="ccount">${n} ${plural(n,'afspraak','afspraken')}</span><span class="sp"></span>
+    <button type="button" class="btn btn-line btn-sm" data-action="editType" data-id="${t.id}">${icon('edit',15)} Bewerken</button>
+    <button type="button" class="btn btn-danger-line btn-sm" data-action="deleteType" data-id="${t.id}" aria-label="Verwijderen">${icon('trash',15)}</button></div></div>`; }).join('')}</div>`
+  : emptyBox('leaf','Er zijn nog geen werkzaamheden.',`<button type="button" class="btn btn-primary" data-action="newType">${icon('plus',18)} Nieuwe werkzaamheid</button>`)}`;
+}
+
+/* ---------- Instellingen ---------- */
+const fmtSize = b => b < 1024 ? b+' B' : (b/1024).toFixed(1).replace('.',',')+' kB';
+function viewInstellingen(){
+  const size = new Blob([JSON.stringify(db)]).size;
+  const lb = db.settings.lastBackup ? new Date(db.settings.lastBackup) : null;
+  const lbTxt = lb ? `${lb.getDate()} ${MAANDEN[lb.getMonth()]} ${lb.getFullYear()} om ${pad(lb.getHours())}:${pad(lb.getMinutes())}` : 'nog nooit';
+  const demoN = db.appointments.filter(a=>a.demo).length + db.clients.filter(c=>c.demo).length;
+  const opt = (from,to,sel) => Array.from({length:to-from+1},(_,i)=>from+i).map(h=>`<option value="${h}" ${h===sel?'selected':''}>${pad(h)}:00</option>`).join('');
+  return `<div class="page-head"><div><h1>Instellingen</h1><p class="sub">Back-up, gegevens en voorkeuren</p></div></div>
+  <div class="set-grid">
+    <section class="card set-card"><h2>Back-up</h2>
+      <p>Al uw gegevens staan alleen op dit apparaat, in deze browser. Maak daarom regelmatig een back-upbestand. Laatste back-up: <b>${lbTxt}</b>.</p>
+      <div class="set-actions"><button type="button" class="btn btn-primary" data-action="exportData">${icon('download',18)} Back-up exporteren</button>
+      <button type="button" class="btn btn-line" data-action="importClick">${icon('upload',18)} Back-up importeren</button>
+      <input type="file" id="importFile" accept=".json,application/json" hidden data-change="importFile"></div>
+    </section>
+    <section class="card set-card"><h2>Kalender</h2><p>Kies welke uren standaard in de dag- en weekweergave getoond worden. Afspraken buiten deze uren worden automatisch ook getoond.</p>
+      <div class="inline" style="max-width:380px"><label>Van</label><select class="in" data-change="dayStart">${opt(0,12,db.settings.dayStart)}</select><label>tot</label><select class="in" data-change="dayEnd">${opt(13,24,db.settings.dayEnd)}</select></div>
+    </section>
+    <section class="card set-card"><h2>Gegevens bekijken en beheren</h2>
+      <p>Zo groot zijn uw opgeslagen gegevens: <b>${fmtSize(size)}</b>.</p>
+      <table class="dtable">
+        <tr><td>${icon('list',18)} Afspraken</td><td><b>${db.appointments.length}</b></td><td><button type="button" class="btn btn-line btn-sm" data-action="goAll" data-view="afspraken">Bekijken</button> <button type="button" class="btn btn-danger-line btn-sm" data-action="deleteAllAppts" ${db.appointments.length?'':'disabled'}>Alles verwijderen</button></td></tr>
+        <tr><td>${icon('users',18)} Klanten</td><td><b>${db.clients.length}</b></td><td><button type="button" class="btn btn-line btn-sm" data-action="goAll" data-view="klanten">Bekijken</button> <button type="button" class="btn btn-danger-line btn-sm" data-action="deleteAllClients" ${db.clients.length?'':'disabled'}>Alles verwijderen</button></td></tr>
+        <tr><td>${icon('leaf',18)} Werkzaamheden</td><td><b>${db.workTypes.length}</b></td><td><button type="button" class="btn btn-line btn-sm" data-action="goAll" data-view="werk">Bekijken</button></td></tr>
+      </table>
+      <div class="set-actions"><button type="button" class="btn btn-line btn-sm" data-action="showRaw">${icon('db',16)} Alle gegevens tonen</button></div>
+    </section>
+    <section class="card set-card"><h2>Voorbeeldgegevens</h2>
+      <p>Wilt u de app eerst uitproberen? Laad dan een paar voorbeelden. Deze zijn gemarkeerd met “Demo” en zijn met één klik weer te verwijderen. ${demoN ? `Er staan nu <b>${demoN}</b> voorbeeld-items in de planner.` : ''}</p>
+      <div class="set-actions"><button type="button" class="btn btn-line" data-action="loadDemo">Voorbeeldgegevens laden</button>${demoN ? `<button type="button" class="btn btn-danger-line" data-action="removeDemo">Voorbeeldgegevens verwijderen</button>` : ''}</div>
+    </section>
+    <section class="card set-card danger-card"><h2>Planner resetten</h2>
+      <p>Verwijdert <b>alle</b> afspraken, klanten en eigen werkzaamheden definitief en zet de standaard werkzaamheden terug. Maak eerst een back-up als u iets wilt bewaren.</p>
+      <button type="button" class="btn btn-danger" data-action="resetAll">${icon('trash',18)} Alles resetten</button>
+    </section>
+  </div>`;
+}
+
+/* =========================================================
+   FORMULIEREN EN DIALOGEN
+   ========================================================= */
+const frow = (label, id, ctl) => `<div class="frow"><label for="${id}">${label}</label><div>${ctl}</div></div>`;
+const showErr = (f, msg) => { let e = f.querySelector('.form-error'); if(!e){ e = document.createElement('div'); e.className = 'form-error'; e.setAttribute('role','alert'); f.querySelector('.modal-body').prepend(e); } e.textContent = msg; e.scrollIntoView({block:'nearest'}); };
+const val = (fd, n) => (fd.get(n) || '').toString().trim();
+
+function openApptForm(o={}){
+  const a = o.id ? db.appointments.find(x => x.id === o.id) : null;
+  const defDate = ui.view === 'planning' ? ui.calDate : todayStr();
+  const v = a || {title:'', clientId:o.clientId||'', clientName:'', date:o.date||defDate, start:o.start||'', end:'', location:'', typeId:'', status:'gepland', notes:''};
+  if(!a && v.clientId){ const c = getClient(v.clientId); if(c) v.location = c.address || ''; }
+  const orphan = !getClient(v.clientId) && v.clientName;
+  const clientOpts = `<option value="">— Geen klant gekozen —</option>${orphan?`<option value="__keep" selected>${esc(v.clientName)} (niet meer in klantenlijst)</option>`:''}`
+    + [...db.clients].sort((x,y)=>x.name.localeCompare(y.name,'nl')).map(c => `<option value="${c.id}" ${v.clientId===c.id?'selected':''}>${esc(c.name)}</option>`).join('')
+    + `<option value="__new">+ Nieuwe klant toevoegen…</option>`;
+  const ty = getType(v.typeId);
+  const body = `
+    <input class="in title-in" type="text" name="title" id="f-title" placeholder="Naam van de afspraak of klus" value="${esc(v.title)}" maxlength="120" autofocus>
+    <div style="height:8px"></div>
+    ${frow('Klant','f-client',`<select class="in" name="clientId" id="f-client" data-change="apptClient">${clientOpts}</select>
+      <div class="newclient" id="newClientBox" hidden>
+        <div class="frow"><label for="nc-name">Naam</label><input class="in" name="newName" id="nc-name" placeholder="Naam van de nieuwe klant"></div>
+        <div class="frow"><label for="nc-phone">Telefoon</label><input class="in" name="newPhone" id="nc-phone" type="tel"></div>
+        <div class="frow"><label for="nc-mail">E-mail</label><input class="in" name="newEmail" id="nc-mail" type="email"></div>
+        <div class="frow"><label for="nc-addr">Adres</label><input class="in" name="newAddress" id="nc-addr"></div>
+      </div>`)}
+    ${frow('Datum','f-date',`<input class="in" type="date" name="date" id="f-date" value="${esc(v.date)}">`)}
+    ${frow('Starttijd','f-start',`<div class="inline"><input class="in" type="time" name="start" id="f-start" value="${esc(v.start)}" step="300"><span style="color:var(--muted)">tot</span><input class="in" type="time" name="end" id="f-end" value="${esc(v.end)}" step="300" aria-label="Eindtijd (optioneel)"></div><small style="color:var(--muted)">Eindtijd is optioneel.</small>`)}
+    ${frow('Locatie','f-loc',`<input class="in" type="text" name="location" id="f-loc" value="${esc(v.location)}" placeholder="Adres of plaats van de klus">`)}
+    ${frow('Werkzaamheid','f-type',`<div class="inline"><i class="dotp" id="typeDot" style="background:${ty?ty.color:'#cbd5d0'}"></i><select class="in" name="typeId" id="f-type" data-change="apptTypeDot"><option value="">— Geen type —</option>${db.workTypes.map(t=>`<option value="${t.id}" ${v.typeId===t.id?'selected':''}>${esc(t.name)}</option>`).join('')}</select></div>`)}
+    ${frow('Status','f-status',`<select class="in" name="status" id="f-status">${STATUSES.map(s=>`<option value="${s.id}" ${v.status===s.id?'selected':''}>${s.naam}</option>`).join('')}</select>`)}
+    ${frow('Notities','f-notes',`<textarea class="in" name="notes" id="f-notes" placeholder="Bijvoorbeeld: sleutel ligt bij de buren">${esc(v.notes)}</textarea>`)}`;
+  const footer = `${a ? `<button type="button" class="btn-text danger up" data-action="deleteAppt" data-id="${a.id}">Verwijderen</button>` : ''}<span class="sp"></span>
+    <button type="button" class="btn-text up" data-action="closeModal">Annuleren</button><button type="submit" class="btn btn-primary up">Opslaan</button>`;
+  const ov = openModal({title: a ? 'Afspraak bewerken' : 'Nieuwe afspraak', body, footer, formName:'apptForm'});
+  ov.querySelector('form').dataset.id = a ? a.id : '';
+}
+
+forms_apptForm = null; // (wordt hieronder ingevuld)
+var forms_apptForm;
+const forms = {};
+forms.apptForm = f => {
+  const fd = new FormData(f), id = f.dataset.id;
+  const title = val(fd,'title'), date = val(fd,'date'), start = val(fd,'start'), end = val(fd,'end');
+  let cid = val(fd,'clientId');
+  if(!title) return showErr(f,'Vul de naam van de afspraak of klus in.');
+  if(!date) return showErr(f,'Kies een datum.');
+  if(!start) return showErr(f,'Kies een starttijd.');
+  if(end && toMin(end) <= toMin(start)) return showErr(f,'De eindtijd moet na de starttijd liggen.');
+  const old = id ? db.appointments.find(x => x.id === id) : null;
+  let cname = '';
+  if(cid === '__new'){
+    const nn = val(fd,'newName');
+    if(!nn) return showErr(f,'Vul de naam van de nieuwe klant in, of kies een bestaande klant.');
+    const email = val(fd,'newEmail');
+    if(email && !email.includes('@')) return showErr(f,'Het e-mailadres van de nieuwe klant lijkt niet te kloppen.');
+    const c = {id:uid(), name:nn, phone:val(fd,'newPhone'), email, address:val(fd,'newAddress'), notes:'', created:Date.now()};
+    db.clients.push(c); cid = c.id; cname = c.name;
+  } else if(cid === '__keep'){ cid = ''; cname = old ? old.clientName : ''; }
+  else if(cid){ cname = (getClient(cid)||{}).name || ''; }
+  const obj = {title, clientId:cid, clientName:cname, date, start, end, location:val(fd,'location'), typeId:val(fd,'typeId'), status:val(fd,'status'), notes:val(fd,'notes')};
+  if(old) Object.assign(old, obj, {updated:Date.now()});
+  else db.appointments.push({id:uid(), ...obj, created:Date.now()});
+  save();
+  closeAllModals();
+  toast(old ? 'Afspraak is bijgewerkt.' : 'Afspraak is opgeslagen.');
+  if(ui.view === 'planning') setCalDate(date);
+  render();
+};
+
+function openApptView(id){
+  const a = db.appointments.find(x => x.id === id); if(!a) return;
+  const ty = getType(a.typeId), st = getStatus(a.status), c = getClient(a.clientId), cn = clientNameOf(a);
+  const rows = [];
+  rows.push(`<div class="vrow">${icon('calendar',20)}<div><b>${esc(cap(dateLong(a.date)))}</b><br>${esc(timeRange(a))}${a.end?'':' <span style="color:var(--muted)">(geen eindtijd)</span>'}</div></div>`);
+  if(cn) rows.push(`<div class="vrow">${icon('user',20)}<div><b>${esc(cn)}</b>${c&&c.phone?`<br><a href="tel:${esc(c.phone.replace(/\s/g,''))}">${esc(c.phone)}</a>`:''}${c&&c.email?`<br><a href="mailto:${esc(c.email)}">${esc(c.email)}</a>`:''}</div></div>`);
+  if(a.location) rows.push(`<div class="vrow">${icon('pin',20)}<div>${esc(a.location)}<br><a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(a.location)}" target="_blank" rel="noopener">Route openen</a></div></div>`);
+  if(ty) rows.push(`<div class="vrow">${icon('tag',20)}<div>${typeChip(ty)}</div></div>`);
+  if(a.notes) rows.push(`<div class="vrow">${icon('note',20)}<div class="pre">${esc(a.notes)}</div></div>`);
+  const body = `<h3 class="vtitle">${esc(a.title)}${a.demo?'<em class="demo">Demo</em>':''}</h3>${badge(st)}
+    <div class="vrows">${rows.join('')}</div>
+    <div class="lbl">Status wijzigen</div>
+    <div class="qs">${STATUSES.map(s => `<button type="button" class="qs-btn ${s.id===a.status?'on':''}" style="--s:${s.kleur}" data-action="setStatus" data-id="${a.id}" data-status="${s.id}">${s.naam}</button>`).join('')}</div>`;
+  openModal({title:'Afspraak', body, size:'', footer:`<button type="button" class="btn-text danger up" data-action="deleteAppt" data-id="${a.id}">Verwijderen</button><span class="sp"></span><button type="button" class="btn-text up" data-action="closeModal">Sluiten</button><button type="button" class="btn btn-primary up" data-action="editAppt" data-id="${a.id}">Bewerken</button>`});
+}
+
+async function removeAppt(id){
+  const a = db.appointments.find(x => x.id === id); if(!a) return;
+  const ok = await confirmDialog({title:'Afspraak verwijderen?', text:`Weet u zeker dat u <b>${esc(a.title)}</b> op ${esc(dateLong(a.date))} definitief wilt verwijderen? Dit kan niet ongedaan worden gemaakt.`});
+  if(!ok) return;
+  db.appointments = db.appointments.filter(x => x.id !== id);
+  save(); closeAllModals(); toast('Afspraak is verwijderd.'); render();
+}
+
+/* Klanten */
+function openClientForm(id){
+  const c = id ? getClient(id) : null;
+  const v = c || {name:'',phone:'',email:'',address:'',notes:''};
+  const body = `${frow('Naam','c-name',`<input class="in" name="name" id="c-name" value="${esc(v.name)}" maxlength="100" autofocus>`)}
+    ${frow('Telefoon','c-phone',`<input class="in" type="tel" name="phone" id="c-phone" value="${esc(v.phone)}" placeholder="Optioneel">`)}
+    ${frow('E-mail','c-mail',`<input class="in" type="email" name="email" id="c-mail" value="${esc(v.email)}" placeholder="Optioneel">`)}
+    ${frow('Adres','c-addr',`<input class="in" name="address" id="c-addr" value="${esc(v.address)}" placeholder="Optioneel">`)}
+    ${frow('Notities','c-notes',`<textarea class="in" name="notes" id="c-notes" placeholder="Optioneel">${esc(v.notes)}</textarea>`)}`;
+  const footer = `${c?`<button type="button" class="btn-text danger up" data-action="deleteClient" data-id="${c.id}">Verwijderen</button>`:''}<span class="sp"></span><button type="button" class="btn-text up" data-action="closeModal">Annuleren</button><button type="submit" class="btn btn-primary up">Opslaan</button>`;
+  const ov = openModal({title: c ? 'Klant bewerken' : 'Nieuwe klant', body, footer, formName:'clientForm', size:'sm'});
+  ov.querySelector('form').dataset.id = c ? c.id : '';
+}
+forms.clientForm = f => {
+  const fd = new FormData(f), id = f.dataset.id;
+  const name = val(fd,'name'), email = val(fd,'email');
+  if(!name) return showErr(f,'Vul de naam van de klant in.');
+  if(email && !email.includes('@')) return showErr(f,'Het e-mailadres lijkt niet te kloppen.');
+  const obj = {name, phone:val(fd,'phone'), email, address:val(fd,'address'), notes:val(fd,'notes')};
+  const c = id ? getClient(id) : null;
+  if(c){ Object.assign(c, obj); db.appointments.forEach(a => { if(a.clientId === c.id) a.clientName = c.name; }); }
+  else db.clients.push({id:uid(), ...obj, created:Date.now()});
+  save(); closeAllModals(); toast(c ? 'Klant is bijgewerkt.' : 'Klant is toegevoegd.'); render();
+};
+function openClientView(id){
+  const c = getClient(id); if(!c) return;
+  const appts = db.appointments.filter(a => a.clientId === id).sort(cmp).reverse();
+  const rows = [];
+  if(c.phone) rows.push(`<div class="vrow">${icon('phone',20)}<div><a href="tel:${esc(c.phone.replace(/\s/g,''))}">${esc(c.phone)}</a></div></div>`);
+  if(c.email) rows.push(`<div class="vrow">${icon('mail',20)}<div><a href="mailto:${esc(c.email)}">${esc(c.email)}</a></div></div>`);
+  if(c.address) rows.push(`<div class="vrow">${icon('pin',20)}<div>${esc(c.address)}<br><a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(c.address)}" target="_blank" rel="noopener">Route openen</a></div></div>`);
+  if(c.notes) rows.push(`<div class="vrow">${icon('note',20)}<div class="pre">${esc(c.notes)}</div></div>`);
+  const body = `<h3 class="vtitle">${esc(c.name)}${c.demo?'<em class="demo">Demo</em>':''}</h3>
+    <div class="vrows">${rows.length ? rows.join('') : '<span style="color:var(--muted)">Geen contactgegevens ingevuld.</span>'}</div>
+    <div class="lbl">Afspraken (${appts.length})</div><div style="margin-top:8px">${appts.length ? appts.map(a => apptRow(a)).join('') : '<p style="color:var(--muted);margin:6px 0">Nog geen afspraken voor deze klant.</p>'}</div>`;
+  openModal({title:'Klant', size:'lg', body, footer:`<button type="button" class="btn-text danger up" data-action="deleteClient" data-id="${c.id}">Verwijderen</button><span class="sp"></span><button type="button" class="btn btn-line up" data-action="newClientAppt" data-id="${c.id}">+ Afspraak</button><button type="button" class="btn btn-primary up" data-action="editClient" data-id="${c.id}">Bewerken</button>`});
+}
+async function removeClient(id){
+  const c = getClient(id); if(!c) return;
+  const n = db.appointments.filter(a => a.clientId === id).length;
+  const ok = await confirmDialog({title:'Klant verwijderen?', text:`Weet u zeker dat u <b>${esc(c.name)}</b> definitief wilt verwijderen?${n ? ` De ${n} ${plural(n,'afspraak','afspraken')} van deze klant blijven bestaan, maar zijn niet meer aan een klant gekoppeld.` : ''} Dit kan niet ongedaan worden gemaakt.`});
+  if(!ok) return;
+  db.appointments.forEach(a => { if(a.clientId === id){ a.clientName = c.name; a.clientId = ''; } });
+  db.clients = db.clients.filter(x => x.id !== id);
+  save(); closeAllModals(); toast('Klant is verwijderd.'); render();
+}
+
+/* Werkzaamheden */
+function openTypeForm(id){
+  const t = id ? getType(id) : null;
+  const v = t || {name:'', color:PALET[0], desc:''};
+  const body = `${frow('Naam','t-name',`<input class="in" name="name" id="t-name" value="${esc(v.name)}" maxlength="60" autofocus>`)}
+    ${frow('Kleur','t-color',`<div class="sw" id="swatches">${PALET.map(c=>`<button type="button" data-action="pickColor" data-color="${c}" class="${c.toLowerCase()===v.color.toLowerCase()?'on':''}" style="background:${c}" aria-label="Kleur ${c}"></button>`).join('')}<input type="color" name="color" id="t-color" value="${v.color}" data-change="typeColorInput" aria-label="Eigen kleur"></div>`)}
+    ${frow('Omschrijving','t-desc',`<textarea class="in" name="desc" id="t-desc" placeholder="Optioneel">${esc(v.desc)}</textarea>`)}`;
+  const ov = openModal({title: t ? 'Werkzaamheid bewerken' : 'Nieuwe werkzaamheid', size:'sm', body, formName:'typeForm', footer:`<button type="button" class="btn-text up" data-action="closeModal">Annuleren</button><button type="submit" class="btn btn-primary up">Opslaan</button>`});
+  ov.querySelector('form').dataset.id = t ? t.id : '';
+}
+forms.typeForm = f => {
+  const fd = new FormData(f), id = f.dataset.id, name = val(fd,'name');
+  if(!name) return showErr(f,'Vul een naam in.');
+  if(db.workTypes.some(t => t.id !== id && t.name.toLowerCase() === name.toLowerCase())) return showErr(f,'Er bestaat al een werkzaamheid met deze naam.');
+  const obj = {name, color:val(fd,'color')||PALET[0], desc:val(fd,'desc')};
+  const t = id ? getType(id) : null;
+  if(t) Object.assign(t, obj); else db.workTypes.push({id:uid(), ...obj});
+  save(); closeAllModals(); toast(t ? 'Werkzaamheid is bijgewerkt.' : 'Werkzaamheid is toegevoegd.'); render();
+};
+async function removeType(id){
+  const t = getType(id); if(!t) return;
+  const n = db.appointments.filter(a => a.typeId === id).length;
+  const ok = await confirmDialog({title:'Werkzaamheid verwijderen?', text:`Weet u zeker dat u <b>${esc(t.name)}</b> wilt verwijderen?${n ? ` De ${n} ${plural(n,'afspraak','afspraken')} met dit type blijven bestaan, maar hebben daarna geen type meer.` : ''}`});
+  if(!ok) return;
+  db.appointments.forEach(a => { if(a.typeId === id) a.typeId = ''; });
+  db.workTypes = db.workTypes.filter(x => x.id !== id);
+  save(); toast('Werkzaamheid is verwijderd.'); render();
+}
+
+/* Voorbeeldgegevens */
+function loadDemo(){
+  const t = todayStr(), W = i => (db.workTypes[i % Math.max(1, db.workTypes.length)] || {}).id || '';
+  const c1 = {id:uid(), name:'Familie de Vries', phone:'06 12345678', email:'devries@voorbeeld.nl', address:'Lindelaan 12, Amsterdam', notes:'Voorbeeldklant', created:Date.now(), demo:true};
+  const c2 = {id:uid(), name:'Mevrouw Bakker', phone:'020 1234567', email:'', address:'Kerkstraat 5, Haarlem', notes:'Heeft een groot balkon', created:Date.now(), demo:true};
+  const c3 = {id:uid(), name:'Dhr. Yilmaz', phone:'', email:'yilmaz@voorbeeld.nl', address:'Parkweg 88, Utrecht', notes:'', created:Date.now(), demo:true};
+  db.clients.push(c1,c2,c3);
+  const mk = (title,c,off,start,end,typeIdx,status,notes) => ({id:uid(), title, clientId:c.id, clientName:c.name, date:addDays(t,off), start, end, location:c.address, typeId:W(typeIdx), status, notes, created:Date.now(), updated:null, demo:true});
+  db.appointments.push(
+    mk('Border beplanten',c1,-3,'09:00','12:00',0,'afgerond','Voorbeeldafspraak'),
+    mk('Potten vullen voor het terras',c2,0,'10:00','11:30',2,'bevestigd','Aarde en planten meenemen'),
+    mk('Tuin opfrissen',c3,0,'13:00','16:00',3,'gepland',''),
+    mk('Moestuin zaaien',c1,1,'09:30','',1,'gepland','Zaden zijn al gekocht'),
+    mk('Planten verzorgen en snoeien',c2,3,'14:00','15:30',4,'bevestigd',''),
+    mk('Balkon beplanten',c2,6,'11:00','13:00',5,'gepland','Voorbeeldafspraak')
+  );
+  save(); toast('Voorbeeldgegevens zijn geladen.'); render();
+}
+
+/* =========================================================
+   ACTIES
+   ========================================================= */
+const actions = {
+  closeModal: el => closeModal(el.closest('.overlay')),
+  newAppt: () => openApptForm({}),
+  newApptOn: el => openApptForm({date:el.dataset.date}),
+  slotClick: (el, e) => {
+    const r = el.getBoundingClientRect(), lo = +el.dataset.lo;
+    const mins = lo*60 + Math.floor(((e.clientY - r.top) / HOUR_H * 60) / 30) * 30;
+    openApptForm({date:el.dataset.date, start:minToStr(Math.max(0, Math.min(23*60+30, mins)))});
+  },
+  viewAppt: el => openApptView(el.dataset.id),
+  editAppt: el => { closeModal(el.closest('.overlay')); openApptForm({id:el.dataset.id}); },
+  deleteAppt: el => removeAppt(el.dataset.id),
+  setStatus: el => {
+    const a = db.appointments.find(x => x.id === el.dataset.id); if(!a) return;
+    a.status = el.dataset.status; a.updated = Date.now(); save();
+    closeModal(el.closest('.overlay')); openApptView(a.id); render(); toast(`Status: ${getStatus(a.status).naam}.`);
+  },
+  gotoDay: el => { ui.calView = 'day'; setCalDate(el.dataset.date); ui.gridScroll = null; closeAllModals(); go('planning'); },
+  calPrev: () => shiftCal(-1),
+  calNext: () => shiftCal(1),
+  calToday: () => { setCalDate(todayStr()); ui.gridScroll = null; render(); },
+  calView: el => { ui.calView = el.dataset.v; ui.gridScroll = null; render(); },
+  toggleSide: () => { ui.sidebar = !ui.sidebar; render(); },
+  miniPrev: () => { const d = parseDate(ui.miniMonth); d.setMonth(d.getMonth()-1); ui.miniMonth = fmtDate(d); render(); },
+  miniNext: () => { const d = parseDate(ui.miniMonth); d.setMonth(d.getMonth()+1); ui.miniMonth = fmtDate(d); render(); },
+  miniDay: el => { setCalDate(el.dataset.date); render(); },
+  statGo: (el, e) => {
+    if(e) e.preventDefault();
+    if(el.dataset.tab){ ui.apptTab = el.dataset.tab; ui.apptStatus = el.dataset.status || ''; ui.apptType = ''; ui.search = ''; ui.apptSort = el.dataset.tab === 'past' ? 'desc' : 'asc'; go('afspraken'); }
+    else if(el.dataset.view) go(el.dataset.view);
+  },
+  goAll: el => go(el.dataset.view),
+  attStale: () => { ui.apptTab = 'past'; ui.apptStatus = 'open'; ui.apptType = ''; ui.search = ''; ui.apptSort = 'desc'; go('afspraken'); },
+  apptTab: el => { ui.apptTab = el.dataset.tab; ui.apptSort = ui.apptTab === 'past' ? 'desc' : 'asc'; render(); },
+  apptSort: () => { ui.apptSort = ui.apptSort === 'asc' ? 'desc' : 'asc'; render(); },
+  newClient: () => openClientForm(),
+  viewClient: el => openClientView(el.dataset.id),
+  editClient: el => { closeModal(el.closest('.overlay')); openClientForm(el.dataset.id); },
+  deleteClient: el => removeClient(el.dataset.id),
+  newClientAppt: el => { closeAllModals(); openApptForm({clientId:el.dataset.id}); },
+  newType: () => openTypeForm(),
+  editType: el => openTypeForm(el.dataset.id),
+  deleteType: el => removeType(el.dataset.id),
+  pickColor: el => {
+    const f = el.closest('form'); f.querySelector('#t-color').value = el.dataset.color;
+    f.querySelectorAll('#swatches button').forEach(b => b.classList.toggle('on', b === el));
+  },
+  exportData: () => {
+    db.settings.lastBackup = new Date().toISOString(); save();
+    const blob = new Blob([JSON.stringify({...db, exportedAt:new Date().toISOString()}, null, 2)], {type:'application/json'});
+    const url = URL.createObjectURL(blob), a = document.createElement('a');
+    a.href = url; a.download = `dako-planner-backup-${todayStr()}.json`;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 2000);
+    toast('Back-up is gedownload. Bewaar het bestand op een veilige plek.'); render();
+  },
+  importClick: () => { const i = $('#importFile'); if(i) i.click(); },
+  showRaw: () => openModal({title:'Alle opgeslagen gegevens', size:'lg', body:`<pre class="raw">${esc(JSON.stringify(db, null, 2))}</pre>`, footer:`<span class="sp"></span><button type="button" class="btn btn-primary up" data-action="closeModal">Sluiten</button>`}),
+  deleteAllAppts: async () => {
+    const ok = await confirmDialog({title:'Alle afspraken verwijderen?', text:`Alle <b>${db.appointments.length}</b> afspraken worden definitief verwijderd. Klanten en werkzaamheden blijven bestaan. Dit kan niet ongedaan worden gemaakt.`, confirmLabel:'Alles verwijderen'});
+    if(!ok) return; db.appointments = []; save(); toast('Alle afspraken zijn verwijderd.'); render();
+  },
+  deleteAllClients: async () => {
+    const ok = await confirmDialog({title:'Alle klanten verwijderen?', text:`Alle <b>${db.clients.length}</b> klanten worden definitief verwijderd. Afspraken blijven bestaan, maar zijn niet meer aan een klant gekoppeld. Dit kan niet ongedaan worden gemaakt.`, confirmLabel:'Alles verwijderen'});
+    if(!ok) return;
+    db.appointments.forEach(a => { const c = getClient(a.clientId); if(c){ a.clientName = c.name; a.clientId = ''; } });
+    db.clients = []; save(); toast('Alle klanten zijn verwijderd.'); render();
+  },
+  loadDemo: () => loadDemo(),
+  removeDemo: async () => {
+    const ok = await confirmDialog({title:'Voorbeeldgegevens verwijderen?', text:'Alle items met het label “Demo” worden verwijderd. Uw eigen gegevens blijven bewaard.', confirmLabel:'Verwijderen'});
+    if(!ok) return;
+    db.appointments = db.appointments.filter(a => !a.demo); db.clients = db.clients.filter(c => !c.demo);
+    save(); toast('Voorbeeldgegevens zijn verwijderd.'); render();
+  },
+  resetAll: async () => {
+    const ok = await confirmDialog({title:'Alles resetten?', text:'<b>Waarschuwing:</b> alle afspraken, klanten en eigen werkzaamheden worden <b>definitief</b> verwijderd. Dit kan niet ongedaan worden gemaakt. Maak eerst een back-up als u iets wilt bewaren.', confirmLabel:'Alles verwijderen', requireText:'RESET'});
+    if(!ok) return;
+    db = defaultDb(); ui.hiddenTypes.clear(); save(); toast('De planner is gereset.'); render();
+  }
+};
+
+const changes = {
+  apptClient: el => {
+    const box = $('#newClientBox'); if(!box) return;
+    box.hidden = el.value !== '__new';
+    if(el.value === '__new'){ const n = $('#nc-name'); if(n) n.focus(); }
+    const c = getClient(el.value), loc = $('#f-loc');
+    if(c && c.address && loc && !loc.value.trim()) loc.value = c.address;
+  },
+  apptTypeDot: el => { const t = getType(el.value), d = $('#typeDot'); if(d) d.style.background = t ? t.color : '#cbd5d0'; },
+  typeColorInput: el => { el.closest('form').querySelectorAll('#swatches button').forEach(b => b.classList.toggle('on', b.dataset.color.toLowerCase() === el.value.toLowerCase())); },
+  toggleType: el => { if(el.checked) ui.hiddenTypes.delete(el.dataset.id); else ui.hiddenTypes.add(el.dataset.id); render(); },
+  toggleCancelled: el => { ui.showCancelled = el.checked; render(); },
+  apptStatus: el => { ui.apptStatus = el.value; render(); },
+  apptType: el => { ui.apptType = el.value; render(); },
+  dayStart: el => { db.settings.dayStart = +el.value; save(); toast('Instelling opgeslagen.'); },
+  dayEnd: el => { db.settings.dayEnd = +el.value; save(); toast('Instelling opgeslagen.'); },
+  importFile: async el => {
+    const file = el.files && el.files[0]; el.value = '';
+    if(!file) return;
+    let data;
+    try{ data = JSON.parse(await file.text()); }catch(e){ return toast('Dit bestand is geen geldig back-upbestand.','error'); }
+    if(!data || data.app !== 'dako-planner' || !Array.isArray(data.appointments) || !Array.isArray(data.clients)) return toast('Dit bestand is geen back-up van de Dako Planner.','error');
+    const norm = normalize(data);
+    const ok = await confirmDialog({title:'Back-up terugzetten?', text:`Alle huidige gegevens worden <b>vervangen</b> door deze back-up: ${norm.appointments.length} ${plural(norm.appointments.length,'afspraak','afspraken')}, ${norm.clients.length} ${plural(norm.clients.length,'klant','klanten')} en ${norm.workTypes.length} soorten werkzaamheden. Dit kan niet ongedaan worden gemaakt. Wilt u uw huidige gegevens bewaren, maak dan eerst een back-up.`, confirmLabel:'Terugzetten', danger:false});
+    if(!ok) return;
+    db = norm; ui.hiddenTypes.clear(); save(); toast('De back-up is teruggezet.'); render();
+  }
+};
+
+const inputs = {
+  search: el => {
+    ui.search = el.value;
+    const a = $('#apptSearch'), b = $('#topSearch');
+    if(a && a !== el) a.value = el.value;
+    if(b && b !== el) b.value = el.value;
+    if(ui.view !== 'afspraken'){ ui.apptTab = 'all'; ui.apptStatus = ''; ui.apptType = ''; ui.apptSort = 'asc'; go('afspraken'); }
+    else { const l = $('#apptList'); if(l) l.innerHTML = apptListHtml(); }
+  },
+  clientSearch: el => { ui.clientSearch = el.value; const l = $('#clientList'); if(l) l.innerHTML = clientListHtml(); }
+};
+
+document.addEventListener('click', e => {
+  const el = e.target.closest('[data-action]');
+  if(!el) return;
+  const fn = actions[el.dataset.action];
+  if(fn) fn(el, e);
+});
+document.addEventListener('change', e => { const el = e.target.closest('[data-change]'); if(el && changes[el.dataset.change]) changes[el.dataset.change](el, e); });
+document.addEventListener('input', e => { const el = e.target.closest('[data-input]'); if(el && inputs[el.dataset.input]) inputs[el.dataset.input](el, e); });
+document.addEventListener('submit', e => {
+  const f = e.target.closest('form[data-form]');
+  e.preventDefault();
+  if(f && forms[f.dataset.form]) forms[f.dataset.form](f);
+});
+document.addEventListener('keydown', e => { if(e.key === 'Escape' && document.querySelector('.overlay')) closeModal(); });
+window.addEventListener('storage', e => { if(e.key === KEY){ db = load(); render(); } });
+
+/* ---------- Opstarten ---------- */
+renderShell();
+ui.view = viewFromHash();
+render();
+setInterval(() => { if(!document.hidden && !document.querySelector('.overlay') && (ui.view === 'dashboard' || ui.view === 'planning')) render(); }, 60000);
+try{ if(navigator.storage && navigator.storage.persist) navigator.storage.persist(); }catch(e){}
+</script>
+</body>
+</html>
